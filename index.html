@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Finviz S&P 500 Map</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+                         <meta name="viewport" content="width=1024"><meta name="description" content="Stock screener for investors and traders, financial visualizations.">
+<meta name="keywords" content="Stock Screener, Charts, Quotes, Maps, News, Financial Visualizations, Research, Trading Systems">
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="Expires" content="-1">
+<meta http-equiv="Refresh" content="300">
+<link href="http://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://finviz.com/css/finviz.css?rev=123" type="text/css">
+
+<script src="https://finviz.com//script/lightup.js?rev=162" type="text/javascript"></script>
+<script type="text/javascript" src="https://finviz.com//js/libs/shims.min.js?rev=162"></script><script type="text/javascript" src="https://finviz.com/js/libs/d3-json.js"></script></head>
+
+<body class="has-map" style="margin:0; zoom: 0.75" bgcolor="#ffffff">
+  <div class="content map"><div class="container">
+    <div class="view" style="height:0px">
+      <div class="zoom pull-right"></div>
+    </div>
+    <div class="content-view-map" style="margin-left:10px">
+                <div id="map">
+                    <div id="body"></div>
+                    <div id="legend"></div>
+                    <div id="hover-wrapper"></div>
+                </div>
+    </div>
+    <div id="modal"></div></div></div>
+    <script type="text/javascript" src="https://finviz.com/js/dist/runtime.bundle.js?rev=162"></script>
+    <script type="text/javascript" src="https://finviz.com/js/dist/vendors.bundle.js?rev=162"></script>
+    <script type="text/javascript" src="https://finviz.com/js/dist/header.bundle.js?rev=162"></script>
+        
+    <script type="text/javascript" src="https://finviz.com/js/libs/d3.js"></script>
+    <script type="text/javascript" src="https://finviz.com/js/libs/hammer.min.js"></script>
+    <script type="text/javascript" src="https://finviz.com/js/dist/map.bundle.js?rev=162"></script>
+
+    <div id="map-script"></div>
+    <script src="data.js" type="text/javascript">
+    </script>
+    <script type="text/javascript">
+                var FinvizMapAdditional = {};
+
+                var restoreParents = function(data, parent) {
+                    if (parent) {
+                        data.parent = parent;
+                    }
+                    (data.children || []).forEach(function (d) {
+                        restoreParents(d, data);
+                    });
+                };
+
+                function FinvizRestorePerf(data) {
+                    if (typeof FinvizMapPerf[data.name] !== 'undefined') {
+                        data.perf = FinvizMapPerf[data.name];
+                    }
+                    if (typeof FinvizMapAdditional[data.name] !== 'undefined') {
+                        data.additional = FinvizMapAdditional[data.name];
+                    }
+                    (data.children || []).forEach(function (d) {
+                        FinvizRestorePerf(d);
+                    });
+                }
+
+                function FinvizInitMap(width) {
+                    restoreParents(FinvizMapData);
+                    FinvizRestorePerf(FinvizMapData);
+                    FinvizInitCanvas(FinvizMapData, "sec", "", width, "", "1 Day Performance", "Color indicates today's stock performance in percent. Based on the color you can identify losers (red), neutral (black), and gainers (green).", true, false);
+                }
+
+                (function () {
+                    var browserWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+                        contentViewWidth = document.querySelector('.content.map .view').getBoundingClientRect().width - (browserWidth > 1500 ? 60 : 30);
+                    var widths = [788, 1027, 1113, 1187, 1211],
+ 	                    width = widths[0];
+                    widths.forEach(function(w) {
+	                    if (w <= contentViewWidth) {
+		                    width = w;
+	                    }
+                    });
+                    width = browserWidth > 1850 ? 1401 : width;
+
+                    if (width === 1401) {
+                        var className = 'is-wide';
+                        var container = document.querySelector('.content.map .container');
+                        if (container.classList) {
+                          container.classList.add(className);
+                        } else {
+                          container.className += ' ' + className;
+                        }
+                    }
+
+                    var script = document.createElement('script');
+                    script.src = 'https://finviz.com/js/maps/sec_' + width + '.js?rev=162';
+                    script.onload = FinvizInitMap.bind(undefined, width);
+                    script.onreadystatechange = function () {
+                        if (script.readyState == "loaded" || script.readyState == "complete") {
+                            script.onreadystatechange = null;
+                            FinvizInitMap(width);
+                        }
+                    };
+                    document.getElementById('map-script').appendChild(script);
+                })();
+    </script> 
+    <script type="text/javascript">function OnResize(){}window.onresize=OnResize;OnResize();</script>
+  </body>
+</html>
