@@ -15,7 +15,7 @@ Follow the NeeGo assembly instructions to put it all together.
 
 ## Software
 
-I used Pyxian SDK from Renetec: https://www.renetec.io/pages/pyxian-download
+I used Pyxian SDK from Renetec: https://www.renetec.io/pages/easy-gui-development-for-raspberry-pi
 It allows one to develop RPi graphical apps with just HTML and Javascript.  Great fit for this
 usecase.
 
